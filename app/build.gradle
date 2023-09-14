@@ -16,6 +16,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
+        buildConfigField "String", "API_KEY2", "\"${properties.getProperty("API_KEY2")}\""
+        buildConfigField "String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\""
+        buildConfigField "String", "BASE_URL2", "\"${properties.getProperty("BASE_URL2")}\""
     }
 
     buildTypes {
@@ -32,6 +40,7 @@ android {
         jvmTarget = '17'
     }
     buildFeatures{
+        buildConfig true
         dataBinding true
     }
 }
@@ -45,15 +54,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'androidx.activity:activity:1.8.0-beta01'
 
     //navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.2'
-
-    //room-database
-    implementation "androidx.room:room-runtime:2.5.2"
-    annotationProcessor "androidx.room:room-compiler:2.5.2"
-    implementation "androidx.room:room-ktx:2.5.2"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -66,7 +71,6 @@ dependencies {
     //lifecycle
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
-
 
     //location
     implementation 'com.google.android.gms:play-services-location:21.0.1'
@@ -83,9 +87,6 @@ dependencies {
     def koin_android_version = "3.4.3"
     implementation "io.insert-koin:koin-android:$koin_android_version"
     implementation "io.insert-koin:koin-android-compat:$koin_android_version"
-// Jetpack WorkManager
-    implementation "io.insert-koin:koin-androidx-workmanager:$koin_android_version"
-// Navigation Graph
     implementation "io.insert-koin:koin-androidx-navigation:$koin_android_version"
 
 }

@@ -1,6 +1,5 @@
 package com.example.newweather.view.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newweather.R
 import com.example.newweather.databinding.Fragment2Binding
-import com.example.newweather.model.localdata.Location
-import com.example.newweather.viewmodel.CustomViewModel
+import com.example.newweather.model.remotedata.cities.Location
+import com.example.newweather.viewmodel.WeatherViewModel
 
 class SearchAdapter(
     private val binding: Fragment2Binding,
-    private val viewModel: CustomViewModel,
+    private val viewModel: WeatherViewModel,
     private val data: ArrayList<Location>
 ): RecyclerView.Adapter<SearchAdapter.ViewHolder> (){
 

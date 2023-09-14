@@ -18,14 +18,5 @@
         android:id="@+id/fragment2"
         android:name="com.example.newweather.view.weatherui.CurrentWeather"
         android:label="fragment_2"
-        tools:layout="@layout/fragment_2" >
-        <action
-            android:id="@+id/action_fragment2_to_fragment3"
-            app:destination="@id/fragment3" />
-    </fragment>
-    <fragment
-        android:id="@+id/fragment3"
-        android:name="com.example.newweather.view.weatherui.ForecastWeather"
-        android:label="fragment_3"
-        tools:layout="@layout/fragment_3" />
+        tools:layout="@layout/fragment_2" />
 </navigation>

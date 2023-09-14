@@ -73,7 +73,7 @@ fun Context.getCurrentLocation(getLocalWeather: (city: String)->Unit) {
             Toast.makeText(this,"Null Received", Toast.LENGTH_SHORT).show()
         }
         else{
-            Toast.makeText(this,"Get Success", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Got SUccessfully", Toast.LENGTH_SHORT).show()
             if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.TIRAMISU){
                 geocoder.getFromLocation(location.latitude,location.longitude,1,object: Geocoder.GeocodeListener{
                     override fun onGeocode(address: MutableList<Address>) {

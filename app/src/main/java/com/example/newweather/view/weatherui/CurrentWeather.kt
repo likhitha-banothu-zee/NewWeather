@@ -1,7 +1,8 @@
 package com.example.newweather.view.weatherui
 
-import com.example.newweather.model.localdata.Location
+import com.example.newweather.model.remotedata.cities.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +11,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newweather.R
 import com.example.newweather.databinding.Fragment2Binding
 import com.example.newweather.view.adapters.SearchAdapter
-import com.example.newweather.viewmodel.CustomViewModel
+import com.example.newweather.viewmodel.WeatherViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 class CurrentWeather : Fragment() {
 
     lateinit var binding: Fragment2Binding
-    private val viewModel: CustomViewModel by activityViewModel()
+    private val viewModel: WeatherViewModel by activityViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,13 +46,6 @@ class CurrentWeather : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            viewModel.data2.collect({
-                it.let {
-                    SearchRecyclerView(binding, viewModel, it)
-                }
-            })
-        }
 
         binding.searchedcity.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -62,7 +55,6 @@ class CurrentWeather : Fragment() {
                 }
                 return true
             }
-
             override fun onQueryTextChange(newText: String): Boolean {
                 newText.let {
                     if(it.length>=3){
@@ -72,33 +64,38 @@ class CurrentWeather : Fragment() {
                 }
                 return true
             }
-
         })
 
         lifecycleScope.launch {
-            viewModel.result1.collect{
+            viewModel.weather.collect {
                 it.data?.let {
-                    binding.location.text=it.name
-                    binding.weatherCondition.text="${it.weather[0].main}: ${it.weather[0].description}"
-                    binding.degrees.text="${it.main.temp}ºC"
-                    binding.maxTemp.text="${it.main.temp_max}ºC"
-                    binding.minTemp.text="${it.main.temp_min}ºC"
-                    val iconId=it.weather[0].icon
-                    val imgUrl="https://openweathermap.org/img/w/${iconId}.png"
+                    binding.location.text = it.name
+                    Log.d("WeatherInfo", it.name.toString())
+                    binding.weatherCondition.text =
+                        "${it.weather[0].main}: ${it.weather[0].description}"
+                    binding.degrees.text = "${it.main.temp}ºC"
+                    binding.maxTemp.text = "${it.main.temp_max}ºC"
+                    binding.minTemp.text = "${it.main.temp_min}ºC"
+                    val iconId = it.weather[0].icon
+                    val imgUrl = "https://openweathermap.org/img/w/${iconId}.png"
                     Picasso.get().load(imgUrl).into(binding.imageView)
                 }
             }
         }
 
-        binding.search.setOnClickListener {
-            viewModel.getForecast(binding.location.text.toString())
-            Navigation.findNavController(it).navigate(R.id.action_fragment2_to_fragment3)
+        lifecycleScope.launch {
+            viewModel.cities.collect({
+                it.let {
+                    searchRecyclerView(binding, viewModel, it)
+                }
+            })
         }
+
     }
 
-    fun SearchRecyclerView(binding:Fragment2Binding,viewModel: CustomViewModel, data: ArrayList<Location>){
+    fun searchRecyclerView(binding:Fragment2Binding, WeatherViewModel: WeatherViewModel, data: ArrayList<Location>){
         this.binding.recycler.layoutManager = LinearLayoutManager(context)
-        val adapter = SearchAdapter(binding,viewModel,data)
+        val adapter = SearchAdapter(binding,WeatherViewModel,data)
         this.binding.recycler.adapter = adapter
     }
 
