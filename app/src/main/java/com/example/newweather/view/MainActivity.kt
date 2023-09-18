@@ -5,11 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.example.newweather.R
+import androidx.activity.compose.setContent
 import com.example.newweather.utils.UserPermission
 import com.example.newweather.utils.requestPermission
 import com.example.newweather.utils.checkPermission
 import com.example.newweather.utils.getCurrentLocation
+import com.example.newweather.view.weatherui.Navigation
 import com.example.newweather.viewmodel.WeatherViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -17,7 +18,10 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModel<WeatherViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        
+        setContent { 
+            Navigation(viewModel = viewModel)
+        }
 
         if(!checkPermission()){
             requestPermission()
